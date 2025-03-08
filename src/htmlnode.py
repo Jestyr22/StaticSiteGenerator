@@ -22,9 +22,11 @@ class HTMLNode():
 
 class LeafNode(HTMLNode):
     def __init__(self, value, tag=None, props=None):
+        #Note: I messed up here by having the variables in a different order to HTMLNode. Not an issue for this scenario,
+        #but could be an issue in real-life situations. Will use LeafNode order going forward though
         if value is None:
             raise ValueError("LeafNode must have a value")
-        super().__init__(tag, props=props, children=[])
+        super().__init__(tag=tag, props=props, children=[])
         self.value = value
 
     def to_html(self):
@@ -32,6 +34,23 @@ class LeafNode(HTMLNode):
             return self.value
         else:
             return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
+        
+        
+class ParentNode(HTMLNode):
+    def __init__(self, tag, children, props=None):
+        super().__init__(value=None, tag=tag, children=children, props=props)
+    
+    def to_html(self):
+        if not self.tag:
+            raise ValueError("ParentNode must have a tag")
+        if not self.children:
+            raise ValueError("ParentNode must have children")
+        #return "props_to_html" of node *and* children recursively
+        children_to_html = ""
+        for child in self.children:
+            children_to_html += child.props_to_html
+        return(f"<"{tag}">"{children_to_html}"</"{tag}>)
+
         
 
 
