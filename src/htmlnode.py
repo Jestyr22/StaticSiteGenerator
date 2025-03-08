@@ -14,7 +14,7 @@ class HTMLNode():
         props_string = ""
         for i in self.props:
             props_string += f' {i}="{self.props[i]}"'
-        print("props:", self.props)
+        #print("props:", self.props) #added for debugging purposes
         return props_string
 
     def __repr__(self):
@@ -38,7 +38,7 @@ class LeafNode(HTMLNode):
         
 class ParentNode(HTMLNode):
     def __init__(self, tag, children, props=None):
-        super().__init__(value=None, tag=tag, children=children, props=props)
+        super().__init__(tag=tag, children=children, props=props)
     
     def to_html(self):
         if not self.tag:
@@ -48,8 +48,10 @@ class ParentNode(HTMLNode):
         #return "props_to_html" of node *and* children recursively
         children_to_html = ""
         for child in self.children:
-            children_to_html += child.props_to_html
-        return(f"<"{tag}">"{children_to_html}"</"{tag}>)
+            children_to_html += str(child.to_html())
+        return (f"<{self.tag}>{children_to_html}</{self.tag}>")
+    
+
 
         
 
