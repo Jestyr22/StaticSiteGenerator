@@ -7,19 +7,19 @@ def text_node_to_html(text_node):
      TextType.ITALIC: "i",
      TextType.CODE: "code",
     }
-    tag = mapping.get(text_node.type)
+    tag = mapping.get(text_node.text_type)
 
-    if text_node.type == TextType.TEXT: #Should be above the "mapping" dictionary for order of operations, but grouping with the rest of the if statements for readability
+    if text_node.text_type == TextType.TEXT: #Should be above the "mapping" dictionary for order of operations, but grouping with the rest of the if statements for readability
         return LeafNode(text_node.text) 
 
     elif tag: #If the TextType appears in the mapping dictionary
         return LeafNode(text_node.text, tag=tag)
     
-    elif text_node.type == TextType.LINK:
-        return LeafNode(text_node.text, tag ="a", props={"href": text_node.href})
+    elif text_node.text_type == TextType.LINK:
+        return LeafNode(text_node.text, tag ="a", props={"href": text_node.url})
         
-    elif text_node.type == TextType.IMAGE:
-        return LeafNode("", tag="img", props={"src": text_node.src, "alt": text_node.alt})
+    elif text_node.text_type == TextType.IMAGE:
+        return LeafNode("", tag="img", props={"src": text_node.url, "alt": text_node.text})
     
     else:
         raise Exception #Catch-All in case the tag isn't in this list
