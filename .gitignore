@@ -1,1 +1,7 @@
 __pycache__/
+#debug files
+src/debug.py
+debug_output.txt
+
+#test files
+src/test_*
