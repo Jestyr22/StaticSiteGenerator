@@ -47,8 +47,18 @@ class ParentNode(HTMLNode):
             raise ValueError("ParentNode must have children")
         #return "props_to_html" of node *and* children recursively
         children_to_html = ""
-        for child in self.children:
-            children_to_html += str(child.to_html())
+        '''for child in self.children:
+            children_to_html += child.to_html()'''
+        for i, child in enumerate(self.children):
+            print(f"Child {i} type: {type(child)}")
+            try:
+                child_html = child.to_html()
+                children_to_html += child_html
+            except Exception as e:
+                print(f"Error calling to_html on child {i} of type {type(child)}: {e}")
+                print(f"Child details: tag={getattr(child, 'tag', None)}, value={getattr(child, 'value', None)}, children={getattr(child, 'children', None)}")
+                raise
+            
         return (f"<{self.tag}>{children_to_html}</{self.tag}>")
     
 

@@ -5,3 +5,6 @@ debug_output.txt
 
 #test files
 src/test_*
+
+#public directory
+public

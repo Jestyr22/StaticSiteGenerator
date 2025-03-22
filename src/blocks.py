@@ -1,6 +1,6 @@
 from enum import Enum
 import re
-from htmlnode import HTMLNode
+from htmlnode import HTMLNode, LeafNode, ParentNode
 from extract_links import extract_markdown_images, extract_markdown_links, split_nodes_image, split_nodes_link
 from node_delimiter import find_delimiters, split_nodes_delimiter
 from textnode import TextNode, TextType
@@ -128,40 +128,53 @@ def unordered_ordered_list_to_html_nodes(block):
                 content = line[match.end():]
         text_nodes = text_to_textnodes(content)
         html_nodes = text_node_list_to_html(text_nodes)
-        list_items.append(HTMLNode("li", None, html_nodes))
+        list_items.append(ParentNode("li", html_nodes))
     return list_items
 
 def block_to_html_node(block, block_type):
     if block_type == BlockType.PARAGRAPH:
-        text_nodes = text_to_textnodes(block)
+        normalized_block = " ".join(block.split()) #Replaces newlines with spaces and normalizes whitespace
+        text_nodes = text_to_textnodes(normalized_block)
         html_nodes = text_node_list_to_html(text_nodes)
-        return HTMLNode("p", None, html_nodes)
+        return ParentNode("p", html_nodes)
     elif block_type == BlockType.HEADING:
         heading_level = count_heading_level(block)
         heading_text = block.lstrip("#").strip()
-        text_nodes = text_to_textnodes(block)
+        text_nodes = text_to_textnodes(heading_text)
         html_nodes = text_node_list_to_html(text_nodes)
-        return HTMLNode(f"h{heading_level}", None, html_nodes)
+        return ParentNode(f"h{heading_level}", html_nodes)
     elif block_type == BlockType.CODE:
         code_block = code_to_text_node(block)
-        code_node = HTMLNode("code", None, text_node_to_html(code_block))
-        return HTMLNode("pre", None, code_node)
-    elif block_type == BlockType.QUOTES:
-        text_nodes = text_to_textnodes(block)
+        code_node = ParentNode("code", [text_node_to_html(code_block)])
+        return ParentNode("pre", [code_node])
+    elif block_type == BlockType.QUOTE:
+        lines = block.split('\n')
+        clean_lines = []
+        for line in lines:
+            if line.strip().startswith('>'):
+                clean_line = line.strip()[1:].strip()
+                clean_lines.append(clean_line)
+        quote_content = '\n'.join(clean_lines)
+        text_nodes = text_to_textnodes(quote_content)
         html_nodes = text_node_list_to_html(text_nodes)
-        return HTMLNode("blockquote", None, html_nodes)
+        return ParentNode("blockquote", html_nodes)
     elif block_type == BlockType.UNORDERED_LIST:
         html_nodes = unordered_ordered_list_to_html_nodes(block)
-        return HTMLNode("ul", None, html_nodes)
+        return ParentNode("ul", html_nodes)
     elif block_type == BlockType.ORDERED_LIST:
         html_nodes = unordered_ordered_list_to_html_nodes(block)
-        return HTMLNode("ol", None, html_nodes)
+        return ParentNode("ol", html_nodes)
 
 def markdown_to_html_node(markdown):
     blocks = markdown_to_blocks(markdown)
-    parent_node = HTMLNode("div", None, [])
+    #print(f"Number of blocks found: {len(blocks)}")
+    #if blocks:
+        #print(f"First block: '{blocks[0]}'")
+    parent_node = ParentNode("div", [])
     for block in blocks:
         block_type = block_to_block_type(block)
+        #print(f"Block type: {block_type}")
         block_node = block_to_html_node(block, block_type)
+        #print(f"Block node type: {type(block_node)}")
         parent_node.children.append(block_node)
     return parent_node
