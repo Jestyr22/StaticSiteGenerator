@@ -9,11 +9,13 @@ from text_to_textnodes import text_to_textnodes
 from node import text_node_to_html
 from blocks import *
 from generate_page import copy_static, generate_page, extract_title, generate_page_recursive
+import sys
 def main ():
     
-    
+    basepath = sys.argv[1] if len(sys.argv) > 1 else '/'
     copy_static("static", "public")
-    generate_page_recursive("content", "template.html", "public")
+    generate_page_recursive("content", "template.html", "public", basepath)
+
     
     '''
     test_md = "# Test Heading\n\nThis is a paragraph."
