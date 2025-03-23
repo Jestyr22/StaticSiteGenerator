@@ -8,12 +8,12 @@ from textnode import TextNode, TextType
 from text_to_textnodes import text_to_textnodes
 from node import text_node_to_html
 from blocks import *
-from generate_page import copy_static, generate_page, extract_title
+from generate_page import copy_static, generate_page, extract_title, generate_page_recursive
 def main ():
     
     
     copy_static("static", "public")
-    generate_page("content/index.md", "template.html", "public/index.html")
+    generate_page_recursive("content", "template.html", "public")
     
     '''
     test_md = "# Test Heading\n\nThis is a paragraph."
