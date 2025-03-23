@@ -53,21 +53,21 @@ def generate_page(from_path, template_path, dest_path):
     with open(from_path, 'r') as file:
         from_path_contents = file.read()
 
-    print(f"Markdown content length: {len(from_path_contents)}")
-    print(f"First 100 chars: {from_path_contents[:100]}")
+    #print(f"Markdown content length: {len(from_path_contents)}")
+    #print(f"First 100 chars: {from_path_contents[:100]}")
 
     with open(template_path, 'r') as file:
         template_path_contents = file.read() 
     html_node = markdown_to_html_node(from_path_contents)
-    print(f"HTML node type: {type(html_node)}")
+    #print(f"HTML node type: {type(html_node)}")
     markdown_html = html_node.to_html()
-    print(f"Generated HTML length: {len(markdown_html)}")
-    print(f"First 100 chars of HTML: {markdown_html[:100]}")
+    #print(f"Generated HTML length: {len(markdown_html)}")
+    #print(f"First 100 chars of HTML: {markdown_html[:100]}")
 
     title = extract_title(from_path_contents)
     template_path_contents = template_path_contents.replace("{{ Title }}", title)
     template_path_contents = template_path_contents.replace("{{ Content }}", markdown_html)
-    print(f"Final HTML length: {len(template_path_contents)}")
+    #print(f"Final HTML length: {len(template_path_contents)}")
     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
     with open(dest_path, 'w') as file:
         file.write(template_path_contents)

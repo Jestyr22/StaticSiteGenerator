@@ -50,7 +50,7 @@ class ParentNode(HTMLNode):
         '''for child in self.children:
             children_to_html += child.to_html()'''
         for i, child in enumerate(self.children):
-            print(f"Child {i} type: {type(child)}")
+            #print(f"Child {i} type: {type(child)}")
             try:
                 child_html = child.to_html()
                 children_to_html += child_html
