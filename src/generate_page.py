@@ -73,12 +73,14 @@ def generate_page(from_path, template_path, dest_path, basepath):
     os.makedirs(os.path.dirname(dest_path), exist_ok=True)
     with open(dest_path, 'w') as file:
         file.write(template_path_contents)
+        print(f"File should be written to {dest_path}")
+        print(f"File exists: {os.path.exists(dest_path)}")
     
 def generate_page_recursive(dir_path_content, template_path, dest_dir_path, basepath):
     for item in os.listdir(dir_path_content):
         item_path = os.path.join(dir_path_content, item)
         relative_path = os.path.relpath(item_path, start='content')
-        dest_path = os.path.join('public', relative_path)
+        dest_path = os.path.join(dest_dir_path, relative_path)
 
         if os.path.isfile(item_path):
             dest_path = os.path.splitext(dest_path)[0] + '.html'

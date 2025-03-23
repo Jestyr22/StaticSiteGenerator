@@ -11,10 +11,14 @@ from blocks import *
 from generate_page import copy_static, generate_page, extract_title, generate_page_recursive
 import sys
 def main ():
-    
+    #docs_path = os.path.join(os.getcwd(), "docs")
+    #print(f"Docs directory: {docs_path}")
+    #print(f"Docs exists: {os.path.exists(docs_path)}")
+
     basepath = sys.argv[1] if len(sys.argv) > 1 else '/'
     copy_static("static", "docs")
     generate_page_recursive("content", "template.html", "docs", basepath)
+    
 
     
     '''
